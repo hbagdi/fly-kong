@@ -1,0 +1,49 @@
+# fly.toml file generated for purple-bush-144 on 2021-08-07T16:23:00-07:00
+
+app = "purple-bush-144"
+
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[env]
+  KONG_ROLE = "data_plane"
+  KONG_DATABASE = "off"
+  KONG_WORKER_PROCESSES = "1"
+  KONG_VITALS_TTL_DAYS = "732"
+  KONG_CLUSTER_MTLS = "pki"
+  KONG_CLUSTER_CONTROL_PLANE = "kong-cpoutlet-kongincd14ab6.cp.konnect.konghq.com:443"
+  KONG_CLUSTER_SERVER_NAME = "kong-cpoutlet-kongincd14ab6.cp.konnect.konghq.com"
+  KONG_CLUSTER_TELEMETRY_ENDPOINT = "kong-telemetry-kongincd14ab6.tp.konnect.konghq.com:443"
+  KONG_CLUSTER_TELEMETRY_SERVER_NAME = "kong-telemetry-kongincd14ab6.tp.konnect.konghq.com"
+  KONG_CLUSTER_CERT = "/certs/dp-cert"
+  KONG_CLUSTER_CERT_KEY = "/certs/dp-key"
+  KONG_LUA_SSL_TRUSTED_CERTIFICATE = "/certs/ca-cert"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[services]]
+  http_checks = []
+  internal_port = 8000
+  protocol = "tcp"
+  script_checks = []
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 6
+    timeout = "2s"
