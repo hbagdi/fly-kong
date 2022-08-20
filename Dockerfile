@@ -1,5 +1,4 @@
-FROM kong/kong-gateway:2.4.1.1-alpine
-
-COPY ca-cert /certs/ca-cert
+FROM kong/kong-gateway:2.8.1.2-alpine
+USER root
 COPY dp-cert /certs/dp-cert
 COPY dp-key /certs/dp-key

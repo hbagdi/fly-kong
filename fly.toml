@@ -9,15 +9,16 @@ kill_timeout = 5
   KONG_ROLE = "data_plane"
   KONG_DATABASE = "off"
   KONG_WORKER_PROCESSES = "1"
-  KONG_VITALS_TTL_DAYS = "732"
   KONG_CLUSTER_MTLS = "pki"
-  KONG_CLUSTER_CONTROL_PLANE = "kong-cpoutlet-kongincd14ab6.cp.konnect.konghq.com:443"
-  KONG_CLUSTER_SERVER_NAME = "kong-cpoutlet-kongincd14ab6.cp.konnect.konghq.com"
-  KONG_CLUSTER_TELEMETRY_ENDPOINT = "kong-telemetry-kongincd14ab6.tp.konnect.konghq.com:443"
-  KONG_CLUSTER_TELEMETRY_SERVER_NAME = "kong-telemetry-kongincd14ab6.tp.konnect.konghq.com"
+  KONG_PROXY_ERROR_LOG="/dev/stderr"
+  KONG_ADMIN_ERROR_LOG="/dev/stderr"
+  KONG_CLUSTER_CONTROL_PLANE = "33b21e8d4c.us.cp0.konghq.com:443"
+  KONG_CLUSTER_SERVER_NAME = "33b21e8d4c.us.cp0.konghq.com"
+  KONG_CLUSTER_TELEMETRY_ENDPOINT = "33b21e8d4c.us.tp0.konghq.com:443"
+  KONG_CLUSTER_TELEMETRY_SERVER_NAME = "33b21e8d4c.us.tp0.konghq.com"
   KONG_CLUSTER_CERT = "/certs/dp-cert"
   KONG_CLUSTER_CERT_KEY = "/certs/dp-key"
-  KONG_LUA_SSL_TRUSTED_CERTIFICATE = "/certs/ca-cert"
+  KONG_LUA_SSL_TRUSTED_CERTIFICATE="system"
 
 [experimental]
   allowed_public_ports = []
