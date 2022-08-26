@@ -56,11 +56,14 @@ cat dp-key  | base64 | flyctl secrets set KONG_DP_KEY=-
 
 Next, increase the memory limit for the app:
 
-```
+```bash
 flyctl scale memory 512
 ```
 
-Next, copy the 'kong-fly.sh', 'Dockerfile' and 'fly.toml' files from this repository.
+Kong needs a bit more memory than the default limit of 256MB.
+We are working on lowering the memory footprint.
+
+Next, copy the `kong-fly.sh`, `Dockerfile` and `fly.toml` files from this repository.
 You are welcome to clone the repository if that works better for you.
 
 Next, we need to change the control-plane endpoints into `fly.toml` file.
@@ -71,7 +74,7 @@ Usually, the only thing to change should be `33b21e8d4c` part.
 
 We are all set. Now execute:
 
-```
+```bash
 flyctl deploy
 ```
 
@@ -79,25 +82,25 @@ This will deploy Kong Gateway and you should now be able to send requests to it.
 
 To find the hostname, run:
 
-```
+```bash
 flyctl info
 ```
 and copy the "Hostname" value.
 
 And now you can send a request to Kong:
 
-```
+```bash
 curl http://${HOSTNAME}
 ```
 
 You should get a response like:
 
-```
+```json
 {"message":"no Route matched with those values"}
 ```
 
 You can now configure Kong plugins to execute various policies at the edge.
 You can also scale Kong to any number of regions you need and it will just work!
 
-If you have any feedback, do not hesitate to reach out to me via [Twitter][https://twitter.com/hbagdi42]
+If you have any feedback, do not hesitate to reach out to me via [Twitter](https://twitter.com/hbagdi42).
 
