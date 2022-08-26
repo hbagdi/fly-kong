@@ -5,15 +5,99 @@ instances that are managed by Konnect.
 
 ## Steps
 
-1. Sign up for [Konnect](https://cloud.konghq.com) and
+### Sign up
+
+Sign up for [Konnect](https://cloud.konghq.com) and
 [fly.io](https://fly.io) if you haven't already.
-1. Clone this repository
-1. Generate certificate and key for your data-plane nodes. You can do so by
-navigating to Konnect's home page -> Runtime Manager -> Default -> New Runtime instance -> Linux tab 
-then clicking "Generate Certificate" button.
-1. Write these to files with filenames `dp-cert`, `dp-key` file within
-this repository.
-1. Copy the control-plane endpoints into `fly.toml` file. Usually, the only thing to change should be `33b21e8d4c` part.
-1. `flyctl deploy`
-1. `flyctl scale vm 512` This is required otherwise Kong will be out of memory.
-1. Hit your flyctl endpoint.
+
+Kong's Konnect cloud does not require a credit-card.
+Fly does require one for verification.
+
+### Setup flyctl
+
+Set up flyctl using instructions from Fly's [documentation](https://fly.io/docs/getting-started/installing-flyctl/).
+
+Once installed, run `flyctl auth login` to set up your installation.
+
+You can verify your installation is working by running `flyctl apps list`.
+
+### Credentials for Kong Gateway
+
+Kong's Konnect cloud offering offers a managed control-plane for Kong gateway.
+Kong manages and runs the control-plane, a database for it and secures it.
+We are going to run Kong Gateways on Fly and these Gateways will be managed via
+Kong Konnect.
+
+To set up our Kong Gateway, we will first gets credentials for Kong Gateway.
+Go to Konnect's [home page](https://cloud.konghq.com) and navigate to Runtime Manager
+-> Default -> New Runtime instance -> Linux tab then clicking "Generate Certificate" button.
+
+In a directory on your workstation put the certificate into a file named 'dp-cert'
+and the key into a file named 'dp-key'.
+
+### Set up Fly app
+
+Now to deploy Kong Gateway, we are going to first create a Fly app:
+
+```bash
+fly apps create kong-$USER-42
+```
+
+You can substitute $USER with anything you like.
+If you get a name conflict, use a different name.
+Fly app names are globally unique.
+
+Next, upload the credentials to Fly. To do so, execute:
+
+```bash
+cat dp-cert | base64 | flyctl secrets set KONG_DP_CERT=-
+cat dp-key  | base64 | flyctl secrets set KONG_DP_KEY=-
+```
+
+Next, increase the memory limit for the app:
+
+```
+flyctl scale memory 512
+```
+
+Next, copy the 'kong-fly.sh', 'Dockerfile' and 'fly.toml' files from this repository.
+You are welcome to clone the repository if that works better for you.
+
+Next, we need to change the control-plane endpoints into `fly.toml` file.
+You can find these on the same web page from which you generated the certificate.
+Usually, the only thing to change should be `33b21e8d4c` part.
+
+### Run
+
+We are all set. Now execute:
+
+```
+flyctl deploy
+```
+
+This will deploy Kong Gateway and you should now be able to send requests to it.
+
+To find the hostname, run:
+
+```
+flyctl info
+```
+and copy the "Hostname" value.
+
+And now you can send a request to Kong:
+
+```
+curl http://${HOSTNAME}
+```
+
+You should get a response like:
+
+```
+{"message":"no Route matched with those values"}
+```
+
+You can now configure Kong plugins to execute various policies at the edge.
+You can also scale Kong to any number of regions you need and it will just work!
+
+If you have any feedback, do not hesitate to reach out to me via [Twitter][https://twitter.com/hbagdi42]
+
