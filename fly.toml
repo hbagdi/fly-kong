@@ -7,6 +7,8 @@ kill_timeout = 5
 
 [env]
   KONG_ROLE = "data_plane"
+  KONG_KONNECT_MODE = "on"
+  KONG_VITALS = "off"
   KONG_MEM_CACHE_SIZE = "64m"
   KONG_DATABASE = "off"
   KONG_WORKER_PROCESSES = "1"
