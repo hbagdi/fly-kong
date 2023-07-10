@@ -5,6 +5,6 @@ mkdir /certs
 echo $KONG_DP_CERT | base64 -d > /certs/dp-cert
 echo $KONG_DP_KEY  | base64 -d > /certs/dp-key
 
-echo "running kong's docker-entrypoint.sh..."
+echo "running kong's entrypoint.sh..."
 
-/docker-entrypoint.sh kong docker-start
+/entrypoint.sh kong restart
