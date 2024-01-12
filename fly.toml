@@ -7,6 +7,7 @@ kill_timeout = 5
 
 [env]
   KONG_ROLE = "data_plane"
+  KONG_STATUS_LISTEN="0.0.0.0:8010"
   KONG_KONNECT_MODE = "on"
   KONG_VITALS = "off"
   KONG_MEM_CACHE_SIZE = "64m"
@@ -51,3 +52,7 @@ kill_timeout = 5
     interval = "15s"
     restart_limit = 6
     timeout = "2s"
+[metrics]
+port = 8010
+path = "/metrics" # default for most prometheus exporters
+
