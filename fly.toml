@@ -1,63 +1,60 @@
 app = "purple-bush-144"
 
-kill_signal = "SIGINT"
+kill_signal = "SIGQUIT"
 kill_timeout = 5
 
 [build]
-  image = "kong/kong-gateway:3.5"
+image = "kong/kong-gateway:3.5"
 
 [env]
-  KONG_ROLE = "data_plane"
-  KONG_STATUS_LISTEN="0.0.0.0:8010"
-  KONG_KONNECT_MODE = "on"
-  KONG_VITALS = "off"
-  KONG_MEM_CACHE_SIZE = "64m"
-  KONG_DATABASE = "off"
-  KONG_WORKER_PROCESSES = "1"
-  KONG_CLUSTER_MTLS = "pki"
-  KONG_PROXY_ERROR_LOG="/dev/stderr"
-  KONG_ADMIN_ERROR_LOG="/dev/stderr"
-  KONG_CLUSTER_CONTROL_PLANE = "33b21e8d4c.us.cp0.konghq.com:443"
-  KONG_CLUSTER_SERVER_NAME = "33b21e8d4c.us.cp0.konghq.com"
-  KONG_CLUSTER_TELEMETRY_ENDPOINT = "33b21e8d4c.us.tp0.konghq.com:443"
-  KONG_CLUSTER_TELEMETRY_SERVER_NAME = "33b21e8d4c.us.tp0.konghq.com"
-  KONG_LUA_SSL_TRUSTED_CERTIFICATE="system"
+KONG_CLUSTER_CONTROL_PLANE = "33b21e8d4c.us.cp0.konghq.com:443"
+KONG_CLUSTER_SERVER_NAME = "33b21e8d4c.us.cp0.konghq.com"
+KONG_CLUSTER_TELEMETRY_ENDPOINT = "33b21e8d4c.us.tp0.konghq.com:443"
+KONG_CLUSTER_TELEMETRY_SERVER_NAME = "33b21e8d4c.us.tp0.konghq.com"
+KONG_WORKER_PROCESSES = "1"
+KONG_MEM_CACHE_SIZE = "64m"
+KONG_CLUSTER_MTLS = "pki"
+KONG_ROLE = "data_plane"
+KONG_KONNECT_MODE = "on"
+KONG_VITALS = "off"
+KONG_DATABASE = "off"
+KONG_STATUS_LISTEN = "0.0.0.0:8010"
+KONG_PROXY_ERROR_LOG = "/dev/stderr"
 
 [experimental]
-  allowed_public_ports = []
-  auto_rollback = true
+allowed_public_ports = []
+auto_rollback = true
 
 [[services]]
-  http_checks = []
-  internal_port = 8000
-  protocol = "tcp"
-  script_checks = []
+http_checks = []
+internal_port = 8000
+protocol = "tcp"
+script_checks = []
 
-  [services.concurrency]
-    hard_limit = 2000
-    soft_limit = 1000
-    type = "connections"
+[services.concurrency]
+hard_limit = 2000
+soft_limit = 1000
+type = "connections"
 
-  [[services.ports]]
-    handlers = ["http"]
-    port = 80
+[[services.ports]]
+handlers = ["http"]
+port = 80
 
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
+[[services.ports]]
+handlers = ["tls", "http"]
+port = 443
 
-  [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "15s"
-    restart_limit = 6
-    timeout = "2s"
+[[services.tcp_checks]]
+grace_period = "1s"
+interval = "15s"
+restart_limit = 6
+timeout = "2s"
 
 [[vm]]
-  cpu_kind = "shared"
-  cpus = 1
-  memory_mb = 512
+cpu_kind = "shared"
+cpus = 1
+memory_mb = 512
 
 [metrics]
-  port = 8010
-  path = "/metrics" # default for most prometheus exporters
-
+port = 8010
+path = "/metrics"
