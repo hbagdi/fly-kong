@@ -1,9 +1,10 @@
-# fly.toml file generated for purple-bush-144 on 2021-08-07T16:23:00-07:00
-
 app = "purple-bush-144"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
+
+[build]
+  image = "kong/kong-gateway:3.5"
 
 [env]
   KONG_ROLE = "data_plane"
@@ -20,8 +21,6 @@ kill_timeout = 5
   KONG_CLUSTER_SERVER_NAME = "33b21e8d4c.us.cp0.konghq.com"
   KONG_CLUSTER_TELEMETRY_ENDPOINT = "33b21e8d4c.us.tp0.konghq.com:443"
   KONG_CLUSTER_TELEMETRY_SERVER_NAME = "33b21e8d4c.us.tp0.konghq.com"
-  KONG_CLUSTER_CERT = "/certs/dp-cert"
-  KONG_CLUSTER_CERT_KEY = "/certs/dp-key"
   KONG_LUA_SSL_TRUSTED_CERTIFICATE="system"
 
 [experimental]
@@ -35,8 +34,8 @@ kill_timeout = 5
   script_checks = []
 
   [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
+    hard_limit = 2000
+    soft_limit = 1000
     type = "connections"
 
   [[services.ports]]
@@ -52,7 +51,13 @@ kill_timeout = 5
     interval = "15s"
     restart_limit = 6
     timeout = "2s"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+
 [metrics]
-port = 8010
-path = "/metrics" # default for most prometheus exporters
+  port = 8010
+  path = "/metrics" # default for most prometheus exporters
 

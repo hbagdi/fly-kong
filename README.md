@@ -28,7 +28,7 @@ We are going to run Kong Gateways on Fly, and these Gateways will be managed via
 To set up our Kong Gateway, we will first get credentials for Kong Gateway.
 Go to Konnect [home page](https://cloud.konghq.com) and navigate to 
 
-`Runtime Manager -> Default -> New Runtime instance -> Linux tab,` 
+`Gateway Manager -> Default -> New instance -> Linux tab,` 
 
 then click the "Generate Certificate" button.
 
@@ -40,35 +40,31 @@ and the key into a file called 'dp-key.'
 Now to deploy Kong Gateway, we are going first to create a Fly app:
 
 ```bash
-fly apps create kong-$USER-42
+fly apps create kong-$RANDOM_NUMBER
 ```
 
-You can substitute $USER with anything you like.
+You can substitute $RANDOM_NUMBER with anything you like.
 If you get a name conflict, use a different name.
 Fly app names are globally unique.
 
-Next, upload the credentials to Fly. To do so, execute:
 
-```bash
-cat dp-cert | base64 | flyctl secrets set KONG_DP_CERT=-
-cat dp-key  | base64 | flyctl secrets set KONG_DP_KEY=-
-```
-
-Next, increase the memory limit for the app:
-
-```bash
-flyctl scale memory 512
-```
-
-Kong needs a bit more memory than the default limit of 256MB.
-We are working on lowering the memory footprint.
-
-Next, copy the `kong-fly.sh`, `Dockerfile` and `fly.toml` files from this repository.
+Next, copy the `fly.toml` files from this repository.
 You are welcome to clone the repository if that works better for you.
+
+Replace the app name (purple-bush-144 in this repository) with the app name
+you used in the above command.
+
+Next, upload the credentials to Fly.
+To do so, execute following commands from the same directory where you have the fly.toml file.
+
+```bash
+cat dp-cert | base64 -w 0 | flyctl secrets set KONG_CLUSTER_CERT=-
+cat dp-key  | base64 -w 0 | flyctl secrets set KONG_CLUSTER_CERT_KEY=-
+```
 
 Next, we must change the control plane endpoints into a `fly.toml` file.
 You can find these on the same web page from which you generated the certificate.
-Usually, the only thing to change should be `33b21e8d4c` part.
+Usually, the only thing to change should be `33b21e8d4c` and the `us` (region) parts.
 
 ### Run
 
