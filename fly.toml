@@ -1,7 +1,7 @@
 app = "purple-bush-144"
 
 kill_signal = "SIGQUIT"
-kill_timeout = 5
+kill_timeout = 60
 
 [build]
 image = "kong/kong-gateway:3.5"
@@ -21,34 +21,28 @@ KONG_DATABASE = "off"
 KONG_STATUS_LISTEN = "0.0.0.0:8010"
 KONG_PROXY_ERROR_LOG = "/dev/stderr"
 
-[experimental]
-allowed_public_ports = []
-auto_rollback = true
+[http_service]
+  internal_port = 8000
+  force_https = false
+  auto_stop_machines = false
+  auto_start_machines = false
+  min_machines_running = 1
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 10000
+    hard_limit = 20000
+  [http_service.http_options]
+    h2_backend = false
 
-[[services]]
-http_checks = []
-internal_port = 8000
-protocol = "tcp"
-script_checks = []
-
-[services.concurrency]
-hard_limit = 2000
-soft_limit = 1000
-type = "connections"
-
-[[services.ports]]
-handlers = ["http"]
-port = 80
-
-[[services.ports]]
-handlers = ["tls", "http"]
-port = 443
-
-[[services.tcp_checks]]
-grace_period = "1s"
-interval = "15s"
-restart_limit = 6
-timeout = "2s"
+[checks]
+  [checks.readiness_probe]
+    grace_period = "60s"
+    interval = "15s"
+    method = "get"
+    path = "/status/ready"
+    port = 8010
+    timeout = "10s"
+    type = "http"
 
 [[vm]]
 cpu_kind = "shared"
